@@ -2,6 +2,7 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 const ejs = require("ejs");
 const _ = require("lodash");
 
@@ -10,7 +11,12 @@ const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pelle
 const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
 
 const app = express();
-
+mongoose.connect("mongodb+srv://mulat_admin:Daniel931@cluster0.03ntgr3.mongodb.net/blogDB",{useNewUrlParser:true});
+const postSchema = {
+  title :{type:String,required: true},
+  content:String
+}
+const Post= mongoose.model("posts",postSchema);
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -38,15 +44,20 @@ app.get("/compose", function(req, res){
 });
 
 app.post("/compose", function(req, res){
-  const post = {
+  const post =new Post( {
     title: req.body.postTitle,
     content: req.body.postBody
-  };
+  });
 
-  posts.push(post);
-
-  res.redirect("/");
-
+  post.save();
+  Post.find({},function(err,postsArray){
+    if(!err){
+      res.render("home", {
+        startingContent: homeStartingContent,
+        posts: postsArray
+        });
+    }
+  });
 });
 
 app.get("/posts/:postName", function(req, res){
