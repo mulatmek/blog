@@ -25,10 +25,12 @@ app.use(express.static("public"));
 let posts = [];
 
 app.get("/", function(req, res){
-  res.render("home", {
-    startingContent: homeStartingContent,
-    posts: posts
-    });
+  Post.find({}, function(err, posts){
+    res.render("home", {
+      startingContent: homeStartingContent,
+      posts: posts
+      });
+  });
 });
 
 app.get("/about", function(req, res){
@@ -49,15 +51,9 @@ app.post("/compose", function(req, res){
     content: req.body.postBody
   });
 
-  post.save();
-  Post.find({},function(err,postsArray){
+  post.save((err)=>{
     if(!err){
-      posts=postsArray;
-      res.render("home", {
-        startingContent: homeStartingContent,
-        posts: postsArray
-        });
-
+      res.redirect("/");
     }
   });
 });
