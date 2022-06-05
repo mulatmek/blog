@@ -52,26 +52,23 @@ app.post("/compose", function(req, res){
   post.save();
   Post.find({},function(err,postsArray){
     if(!err){
+      posts=postsArray;
       res.render("home", {
         startingContent: homeStartingContent,
         posts: postsArray
         });
+
     }
   });
 });
 
-app.get("/posts/:postName", function(req, res){
-  const requestedTitle = _.lowerCase(req.params.postName);
-
-  posts.forEach(function(post){
-    const storedTitle = _.lowerCase(post.title);
-
-    if (storedTitle === requestedTitle) {
-      res.render("post", {
-        title: post.title,
-        content: post.content
-      });
-    }
+app.get("/posts/:postId", function(req, res){
+  const requestPostId =req.params.postId;
+  Post.findOne({_id:requestPostId},function(err,post){
+    res.render("post",{
+      title:post.title,
+      content:post.content
+    });
   });
 
 });
