@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "app.js",
+    "heroku"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -15,5 +19,8 @@
     "lodash": "^4.17.11",
     "mongoose": "^6.3.5",
     "nodemon": "^2.0.16"
+  },
+  "engines": {
+    "node": "v16.14.2"
   }
 }
